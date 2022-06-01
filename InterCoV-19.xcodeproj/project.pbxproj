@@ -13,6 +13,7 @@
 		AB041AD028451841004FC5F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB041ACE28451841004FC5F0 /* Main.storyboard */; };
 		AB041AD228451844004FC5F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB041AD128451844004FC5F0 /* Assets.xcassets */; };
 		AB041AD528451844004FC5F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB041AD328451844004FC5F0 /* LaunchScreen.storyboard */; };
+		AB2505BB284776D30028B80B /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = AB2505BA284776D30028B80B /* Charts */; };
 		AB4CC63728451C7C0087CCC5 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4CC63628451C7C0087CCC5 /* FilterViewController.swift */; };
 		AB4CC63928451CE70087CCC5 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4CC63828451CE70087CCC5 /* APICaller.swift */; };
 /* End PBXBuildFile section */
@@ -35,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB2505BB284776D30028B80B /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +91,9 @@
 			dependencies = (
 			);
 			name = "InterCoV-19";
+			packageProductDependencies = (
+				AB2505BA284776D30028B80B /* Charts */,
+			);
 			productName = "InterCoV-19";
 			productReference = AB041AC528451841004FC5F0 /* InterCoV-19.app */;
 			productType = "com.apple.product-type.application";
@@ -117,6 +122,9 @@
 				Base,
 			);
 			mainGroup = AB041ABC28451841004FC5F0;
+			packageReferences = (
+				AB2505B9284776D30028B80B /* XCRemoteSwiftPackageReference "Charts" */,
+			);
 			productRefGroup = AB041AC628451841004FC5F0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -366,6 +374,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AB2505B9284776D30028B80B /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AB2505BA284776D30028B80B /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB2505B9284776D30028B80B /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AB041ABD28451841004FC5F0 /* Project object */;
 }
