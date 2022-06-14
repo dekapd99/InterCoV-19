@@ -1,5 +1,5 @@
 //
-//  APICaller.swift
+//  APIService.swift
 //  InterCoV-19
 //
 //  Created by Deka Primatio on 30/05/22.
@@ -7,6 +7,7 @@
 
 import Foundation
 
+// Extension: Format Tanggal menjadi Standar Penulisan Tanggal di Swift
 extension DateFormatter {
     // Convert string date dari API dan convert menjadi date object
     static let dayFormatter: DateFormatter = {
@@ -17,7 +18,7 @@ extension DateFormatter {
         return formatter
     }()
     
-    // Convert date agar bisa digabung nanti
+    // Convert Date
     static let prettyFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -27,26 +28,25 @@ extension DateFormatter {
     }()
 }
 
-class APICaller{
+// Fungsi Fetch API
+class APIService{
     
-    // variabel shared agar bisa dipanggil tanpa harus memanggil built-in method untuk setiap pemanggilan API
-    // digunakan ketika melakukan fetch data API
-    static let shared = APICaller()
+    static let shared = APIService() // instance -> agar API Service bisa digunakan di project ini
     
     private init() {}
     
-    // sumber API
+    // Base URL: Sumber API
     private struct Constants{
         static let allStatesUrl = URL(string: "https://api.covidtracking.com/v2/states.json")
     }
     
-    // Scope data yang diambil
+    // Data Declaration: Endpoints DataScope (2 Object Data -> national dan state)
     enum DataScope{
-        case national // Mengambil data nasional
-        case state(State) // Mengambil data daerah dari objek State
+        case national
+        case state(State)
     }
     
-    // fungsi untuk mendapatkan data
+    // Fungsi get daily data untuk skala National dan States
     public func getCovidData(for scope: DataScope, completion: @escaping (Result<[DayData], Error>) -> Void) {
         let urlString: String
         switch scope {
@@ -56,75 +56,69 @@ class APICaller{
             urlString =  "https://api.covidtracking.com/v2/states/\(state.state_code.lowercased())/daily.json"
         }
         
-        // variable url yang tidak boleh kosong
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: urlString) else { return } // URL as String -> urlString
         
-        // perintah untuk mengambil data dari API berdasarkan data kasus harian
+        // URL Session: Get Data
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data, error == nil else { return }
             
             // Decode JSON data kasus harian format menjadi objek
             do {
                 let result = try JSONDecoder().decode(CovidDataResponse.self, from: data)
-                
-                // Convert setiap models data
+                // Convert setiap daily data menjadi Models compactMap
                 let models: [DayData] = result.data.compactMap{
-                    // mengambil tanggal dan total dari setiap tanggal
+                    // Get tanggal dan total dari setiap tanggal dan format tanggal tersebut
                     guard let value = $0.cases.total.value,
                           let date = DateFormatter.dayFormatter.date(from: $0.date) else{
                         return nil
                     }
-                    
-                    // menampilkan data tanggal dan total kasusnya
+                    // Menampilkan data tanggal dan total kasus
                     return DayData(
                         date: date,
                         count: value
                     )
                 }
-                
-                completion(.success(models))
+                completion(.success(models)) // Completion Sukses tampilkan Models
             }
             catch{
-                completion(.failure(error))
+                completion(.failure(error)) // Completion Gagal tampilkan Error
             }
         }
-        
         task.resume()
     }
     
-    // perintah untuk mengambil data dari API berdasarkan data tiap States
+    // Get data berdasarkan States
     public func getStateList(completion: @escaping (Result<[State], Error>) -> Void) {
         guard let url = Constants.allStatesUrl else { return }
         
+        // URL Session: Get Data
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data, error == nil else { return }
             
-            // untuk menampilkan data kasus tiap States
+            // Decode JSON data States format menjadi objek States itu sendiri
             do {
-                // Decode JSON data States format menjadi objek
                 let result = try JSONDecoder().decode(StateListResponse.self, from: data)
                 let states = result.data
-                completion(.success(states))
+                completion(.success(states)) // Completion Sukses tampilkan States
             }
             catch{
-                completion(.failure(error))
+                completion(.failure(error)) // Completion Gagal tampilkan Error
             }
         }
-        
         task.resume()
-        
     }
 }
 
 // MARK: - Codable Models dari API
+// Deklarasi Data yang digunakan dari API
 // Semua let yang ada disini diambil dari bentuk JSON data yang tersedia pada API
-// Setiap hierarki harus dibuatkan Codable datanya
+// Setiap hierarki harus dibuatkan Codable Protocol
 
 struct StateListResponse: Codable{
     let data: [State]
 }
 
-struct State: Codable{
+struct State: Codable {
     let name: String
     let state_code: String
 }

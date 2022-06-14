@@ -15,7 +15,7 @@
 		AB041AD528451844004FC5F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB041AD328451844004FC5F0 /* LaunchScreen.storyboard */; };
 		AB2505BB284776D30028B80B /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = AB2505BA284776D30028B80B /* Charts */; };
 		AB4CC63728451C7C0087CCC5 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4CC63628451C7C0087CCC5 /* FilterViewController.swift */; };
-		AB4CC63928451CE70087CCC5 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4CC63828451CE70087CCC5 /* APICaller.swift */; };
+		AB4CC63928451CE70087CCC5 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4CC63828451CE70087CCC5 /* APIService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +28,7 @@
 		AB041AD428451844004FC5F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AB041AD628451844004FC5F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB4CC63628451C7C0087CCC5 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
-		AB4CC63828451CE70087CCC5 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		AB4CC63828451CE70087CCC5 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,14 +63,14 @@
 			isa = PBXGroup;
 			children = (
 				AB041AC828451841004FC5F0 /* AppDelegate.swift */,
+				AB4CC63828451CE70087CCC5 /* APIService.swift */,
+				AB4CC63628451C7C0087CCC5 /* FilterViewController.swift */,
 				AB041ACA28451841004FC5F0 /* SceneDelegate.swift */,
 				AB041ACC28451841004FC5F0 /* ViewController.swift */,
 				AB041ACE28451841004FC5F0 /* Main.storyboard */,
 				AB041AD128451844004FC5F0 /* Assets.xcassets */,
 				AB041AD328451844004FC5F0 /* LaunchScreen.storyboard */,
 				AB041AD628451844004FC5F0 /* Info.plist */,
-				AB4CC63628451C7C0087CCC5 /* FilterViewController.swift */,
-				AB4CC63828451CE70087CCC5 /* APICaller.swift */,
 			);
 			path = "InterCoV-19";
 			sourceTree = "<group>";
@@ -155,7 +155,7 @@
 				AB041ACD28451841004FC5F0 /* ViewController.swift in Sources */,
 				AB041AC928451841004FC5F0 /* AppDelegate.swift in Sources */,
 				AB4CC63728451C7C0087CCC5 /* FilterViewController.swift in Sources */,
-				AB4CC63928451CE70087CCC5 /* APICaller.swift in Sources */,
+				AB4CC63928451CE70087CCC5 /* APIService.swift in Sources */,
 				AB041ACB28451841004FC5F0 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

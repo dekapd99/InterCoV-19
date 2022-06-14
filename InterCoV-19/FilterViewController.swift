@@ -7,29 +7,28 @@
 
 import UIKit
 
-
-// filterviewcontroller adalah tampilan ui pada halaman States
+// Halaman Filter States
 class FilterViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
 
     public var completion: ((State) -> Void)?
     
-    // return filter ke dalam filterviewcontroller
+    // Tampilkan hasil filter ke Table Cell
     private let tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         return table
     }()
     
-    // memproses data state dari api di main thread
+    // Hasil Fetch Data State di Main Thread
     private var states: [State] = []{
         didSet {
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self.tableView.reloadData() // Reload Data
             }
         }
     }
     
-    // fungsi utama penampilan halaman load data
+    // Load Tampilan
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,20 +37,21 @@ class FilterViewController: UIViewController, UITableViewDelegate,UITableViewDat
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
-        fetchStates()
+        fetchStates() // Fungsi Fetch States
         
-        // tombol close
+        // Tombol Close Halaman
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(didTapClose))
     }
     
+    // Fungsi Load Layout
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+        tableView.frame = view.bounds // Frame sesuai ukuran layar
     }
     
-    // fetch data sattes
+    // Fetch Data States melalui fungsi getStateList di APIService.swift
     private func fetchStates(){
-        APICaller.shared.getStateList { [weak self] result in
+        APIService.shared.getStateList { [weak self] result in
             switch result{
             case .success(let states):
                 self?.states = states
@@ -63,19 +63,19 @@ class FilterViewController: UIViewController, UITableViewDelegate,UITableViewDat
     
     // MARK: - @objc
     
-    // selector ketika user menekan tombol close dimana akan menutup pop up halaman States
+    // Selector Tombol Close ketika ditekan
     @objc private func didTapClose() {
         dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Table
+    // MARK: - Table View
     
-    // fungsi menampilkan hasil dari states berdasarkan seluruh jumlah states yang ada
+    // Fungsi Menampilkan Data pada Table berdasarkan Jumlah States yang Ada
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return states.count
     }
 
-    // fungsi yang menampilkan hasil nama states di masing-masing cell
+    // Fungsi untuk menampilkan Label Tabel Nama States
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let state = states[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
@@ -84,15 +84,13 @@ class FilterViewController: UIViewController, UITableViewDelegate,UITableViewDat
         return cell
     }
     
-    // fungsi ketika menekan salah satu states
+    // Fungsi Ketika Menekan Salah Satu States
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        // call completion handler
         let state = states[indexPath.row]
-        completion?(state)
         
-        // ketika menekan salah satu states maka akan menutup halaman States
+        completion?(state) // Call completion handler
+        // Ketika menekan salah satu states maka akan menutup halaman States
         dismiss(animated: true, completion: nil)
     }
 }

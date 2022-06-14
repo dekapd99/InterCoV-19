@@ -8,19 +8,10 @@
 import UIKit
 import Charts
 
-// Data Kasus Covid
+// Tampilan Beranda Aplikasi
 class ViewController: UIViewController, UITableViewDataSource {
     
-    
-    /*
-     - Call APIs
-     - ViewModel
-     - View: Table
-     - Filter / User Bisa memilih Daerah dari Data di API
-     - Update UI
-     */
-    
-    // Format angka agar bisa terlihat seperti ini 1.000.0000
+    // Format angka agar bisa terlihat seperti ini -> 1.000.000
     static let numberFormmater: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.usesGroupingSeparator = true
@@ -30,7 +21,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         return formatter
     }()
     
-    // Table View UI
+    // Buat tabel dari UITableView
     private let tableView: UITableView = {
         let table = UITableView(frame: .zero)
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -47,22 +38,23 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
     }
     
-    // Membuat default data yang ditampilkan berdasarkan data nasional
-    private var scope: APICaller.DataScope = .national
+    // Default: data yang ditampilkan berdasarkan data nasional
+    private var scope: APIService.DataScope = .national
 
-    // Main thread
+    // Load Tampilan Aplikasi
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Covid Cases"
-        configureTable() // display table
-        createFilterButton() // filter daerah
-        fetchData() // fetch data api
+        configureTable()        // display table
+        createFilterButton()    // filter daerah
+        fetchData()             // fetch data API
     }
     
+    // Fungsi load layout
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds //supaya layout pas sama layar
+        tableView.frame = view.bounds // Frame sesuai ukuran layar
     }
     
     // Framework graphs dari https://github.com/danielgindi/Charts
@@ -70,40 +62,41 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         // Header Graphs
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.width/1.5))
-        headerView.clipsToBounds = true //supaya layout pas sama layar
+        headerView.clipsToBounds = true //supaya layout pas sama ukuran layar
+    
+        let set = dayData.prefix(20) // Tampilkan max 20 data terakhir
+        var entries: [BarChartDataEntry] = [] // Penampung data entries
         
-        let set = dayData.prefix(20) // menampilkan max 20 data terakhir
-        var entries: [BarChartDataEntry] = [] //penampung data entries
-        // menampilkan data dari dataset yang dimiliki
+        // Tampilkan data dari dataset index
         for index in 0..<set.count{
             let data = set[index]
             entries.append(.init(x: Double(index), y: Double(data.count)))
         }
         
-        let dataSet = BarChartDataSet(entries: entries)
+        let dataSet = BarChartDataSet(entries: entries) // penampungan dataset
         
         dataSet.colors = ChartColorTemplates.joyful() // warna graph
         
-        let data: BarChartData = BarChartData(dataSet: dataSet)
+        let data: BarChartData = BarChartData(dataSet: dataSet) // Masukkan dataset ke dalam BarChart
         
-        let chart = BarChartView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.width/1.5)) // setting barchart
+        let chart = BarChartView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.width/1.5)) // Setting Frame BarChart
         
-        chart.data = data //chart data diambil dari data
+        chart.data = data // Chart Data dibuat berdasarkan data yang tersimpan di API
         
-        headerView.addSubview(chart) //menampilkan header
+        headerView.addSubview(chart) // HeaderView
         
-        tableView.tableHeaderView = headerView
+        tableView.tableHeaderView = headerView // Tabel HeaderView
     }
     
-    // fungsi konfigurasi table yang dimana akan ditampilkan dengan sendiri
+    // Fungsi Tabel Konfigurasi Sumber Data
     private func configureTable() {
         view.addSubview(tableView)
         tableView.dataSource = self
     }
     
-    // fungsi fetch data-data dari api
+    // Fungsi Fetch Data API
     private func fetchData() {
-        APICaller.shared.getCovidData(for: scope) { [weak self] result in
+        APIService.shared.getCovidData(for: scope) { [weak self] result in
             switch result {
             case .success(let dayData):
                 self?.dayData = dayData
@@ -113,22 +106,21 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
     }
     
-    // fungsi memasukkan data api ke filter daerah
-    private func createFilterButton(){
-        // fungsi tombol state untuk menampilkan daerah
+    // Fungsi Filter Button
+    private func createFilterButton() {
         let buttonTitle: String = {
             switch scope{
             case .national: return "State"
             case .state(let state): return state.name
             }
         }()
-        // tombol state
+        // Tombol Filter
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: buttonTitle, style: .done, target: self, action: #selector(didTapFilter))
     }
     
     // MARK: - @objc
     
-    // fungsi selector ketika tombol state ditekan
+    // Fungsi Selector ketika Tombol Filter di Tekan
     @objc private func didTapFilter(){
         let vc = FilterViewController()
         vc.completion = { [weak self] state in
@@ -137,19 +129,19 @@ class ViewController: UIViewController, UITableViewDataSource {
             self?.createFilterButton() // filter daerah
         }
         
-        // menampilkan daerah ke dalam ui
+        // Menampilkan hasil filter daerah
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
     }
     
     //MARK: - TABLE VIEW
     
-    // fungsi yang menampilkan seluruh data berdasarkan perhitungan setiap data harian
+    // Fungsi Menampilkan Data pada Table berdasarkan Daily Data
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dayData.count
     }
     
-    // fungsi untuk menampilkan label default data dari tiap cell
+    // Fungsi untuk menampilkan Label Tabel
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let data = dayData[indexPath.row]
         let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
@@ -157,7 +149,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         return cell
     }
 
-    // fungsi format bentuk text yang akan ditampilkan
+    // Fungsi Format Text untuk Tanggal dan Angka Digit
     private func createText(with data: DayData) -> String? {
         let dateString = DateFormatter.prettyFormatter.string(from: data.date)
         let total = Self.numberFormmater.string(from: NSNumber(value: data.count))
