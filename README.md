@@ -26,6 +26,11 @@ Berikut struktur file dan folder pada InterCoV-19:
     ├── info
     └── FilterViewController.swift                    # Tampilan Halaman dan Fungsi Filter States
 
+## Features:
+
+* Show Data
+* Filter States
+
 ## Build With:
 * [Swift](https://www.swift.org/documentation/)
 * [Xcode](https://developer.apple.com/xcode/)
