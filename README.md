@@ -1,10 +1,9 @@
-# InterCoV-19
-
 <!-- ABOUT THE PROJECT -->
 <p align="center">
   <a href="#" target="_blank"><img src="InterCoV-19.png" width="200"></a>
 </p>
 
+# InterCoV-19
 Aplikasi iOS InterCoV-19 adalah sebuah aplikasi yang menampilkan kasus harian Covid-19 di U.S dengan framework Charts (danielgindi) dan source data API dari covidtracking.com. Aplikasi ini memfilter data kasus harian berdasarkan States dan menampilkannya dalam bentuk TableView dan Grafik Batang.
 
 ## Preview
